@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.IO;
+using Newtonsoft.Json;
 using Game.Exceptions;
 using Game.GameObjects;
 using Game.Weapons;
 
 namespace Game.Main
 {
+   // public enum Menu { Start, Continue, Exit}
     public class BaseGame
     {
         public Character Character1 { get; set; }
@@ -16,6 +18,9 @@ namespace Game.Main
         public int MapSize1 { get; set; }
         public int MapSize2 { get; set; }
         public Map World { get; set; }
+
+        public List<string> GameList { get; set; }
+       // public Menu menuChoose { get; set; }
         public List<GameObject> GameObjects { get; set; } = new List<GameObject>();
 
         public BaseGame(int mapSize1, int mapSize2)
@@ -73,12 +78,14 @@ namespace Game.Main
                     {
                         item.Move("");
                     }
-                    Console.ReadKey();
+                    if ((Console.ReadKey().Key) == ConsoleKey.Escape)
+                        SaveGame();
                     if (Turn == 2)
                     {
                         var a = 5 / v;
                         throw new GameException("Buy this game to continue");
                     }
+                    
                 }
                 catch (GameException ex)
                 {
@@ -98,6 +105,90 @@ namespace Game.Main
             World.Show(Character1, Character2, Turn);
             Console.WriteLine($"Congrats {World.GetWinner().Name}!");
         }
+        public void SaveGame()
+        {
+            Console.WriteLine("Do you want to save game? Press 1 if YES");
+            if (Console.ReadLine()=="1")
+            {
+                Console.WriteLine("Please input the name for game saving.");
+                string savedGame = Console.ReadLine();
+                JsonSerialize(savedGame, this);
+                GameList.Add(savedGame);
+            }   
 
+        }
+        public void Continue()
+        {
+            GameList
+                .ForEach(x => Console.WriteLine(x));
+            Console.ReadKey();
+            JsonDeserialize(Console.ReadLine()).Start();
+        }
+        public void ExitGame()
+        {
+            System.Diagnostics.Process.GetCurrentProcess().Kill();
+        }
+        public void MenuInvoke()
+        {
+            Console.WriteLine("Menu:");
+            int top = Console.CursorTop;
+            int y = top;
+
+            Console.WriteLine("Start");
+            Console.WriteLine("Continue");
+            Console.WriteLine("Exit");
+            int down = Console.CursorTop;
+            Console.CursorSize = 100;
+            Console.CursorTop = top;
+            ConsoleKey key;
+            while ((key = Console.ReadKey(true).Key) != ConsoleKey.Enter)
+            {
+                if (key == ConsoleKey.UpArrow)
+                {
+                    if (y > top)
+                    {
+                        y--;
+                        Console.CursorTop = y;
+                    }
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    if (y < down - 1)
+                    {
+                        y++;
+                        Console.CursorTop = y;
+                    }
+                }
+            }
+            Console.CursorTop = down;
+
+            if (y == top)
+                Start();
+            else if (y == top + 1)
+                Continue();
+            else if (y == top + 2)
+                ExitGame();
+           
+        }
+        public static void JsonSerialize<T>(string path, T obj) where T : class
+        {
+            using (var fs = new FileStream($"{path}.json", FileMode.OpenOrCreate))
+            {
+                string strObj = JsonConvert.SerializeObject(obj);
+                byte[] data = strObj
+                    .Select(x => (byte)x)
+                    .ToArray();
+                fs.Write(data, 0, data.Length);
+            }
+        }
+        public static BaseGame JsonDeserialize(string path)
+        {
+            using (var streamReader = new StreamReader($"{path}.json"))
+            {
+
+                string dataStr = streamReader.ReadToEnd();
+                return JsonConvert.DeserializeObject<BaseGame>(dataStr);
+            }
+        }
     }
 }

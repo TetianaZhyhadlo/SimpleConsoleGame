@@ -1,6 +1,8 @@
 ﻿using System;
-
+using System.IO;
+using System.Linq;
 using Game.Main;
+using Newtonsoft.Json;
 
 namespace Game
 {
@@ -12,12 +14,13 @@ namespace Game
             {
                 Console.OutputEncoding = System.Text.Encoding.Unicode;
                 BaseGame game = new BaseGame(16, 14);
-                game.Start();
+                game.MenuInvoke();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }            
         }
+       
     }
 }
