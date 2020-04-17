@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Game
 {
+    [Serializable]
     public class Battle
     {
+        [JsonIgnore]
         public GamePerson Character { get; set; }
         public GamePerson Enemy { get; set; }
 

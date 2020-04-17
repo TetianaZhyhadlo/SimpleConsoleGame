@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 using Game.GameObjects;
 
 namespace Game
@@ -12,8 +13,10 @@ namespace Game
         IsEmpty, 
         IsShooted
     }
+    [Serializable]
     public class Cell
     {
+        [JsonIgnore]
         public GameObject GameObject { get; set; }
 
         public Cell()

@@ -10,6 +10,7 @@ using Game.Weapons;
 namespace Game.Main
 {
    // public enum Menu { Start, Continue, Exit}
+   [Serializable]
     public class BaseGame
     {
         public Character Character1 { get; set; }
@@ -17,12 +18,14 @@ namespace Game.Main
         public int Turn { get; set; }
         public int MapSize1 { get; set; }
         public int MapSize2 { get; set; }
+
+        [JsonIgnore]
         public Map World { get; set; }
 
-        public List<string> GameList { get; set; }
+        public List<string> GameList { get; set; } = new List<string>();
        // public Menu menuChoose { get; set; }
         public List<GameObject> GameObjects { get; set; } = new List<GameObject>();
-
+        protected BaseGame() { }
         public BaseGame(int mapSize1, int mapSize2)
         {
             MapSize1 = mapSize1;
@@ -108,13 +111,15 @@ namespace Game.Main
         public void SaveGame()
         {
             Console.WriteLine("Do you want to save game? Press 1 if YES");
-            if (Console.ReadLine()=="1")
+            if (Console.ReadLine() == "1")
             {
                 Console.WriteLine("Please input the name for game saving.");
                 string savedGame = Console.ReadLine();
                 JsonSerialize(savedGame, this);
                 GameList.Add(savedGame);
-            }   
+            }
+            else
+                ExitGame();
 
         }
         public void Continue()

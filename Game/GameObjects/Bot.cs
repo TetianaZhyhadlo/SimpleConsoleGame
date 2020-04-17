@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Game.GameObjects
 {
+    [Serializable]
     public class Bot : GamePerson
     {
+        [JsonIgnore]
+        public string xxx { get; set; }
+        protected Bot() { }
         public Bot(string name, bool plFriend) : base(name, plFriend)
         {
         }

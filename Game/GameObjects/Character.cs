@@ -1,13 +1,20 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Game.GameObjects
 {
+    [Serializable]
     public class Character : GamePerson
     {
+        [JsonIgnore]
+        public string yyy { get; set; }
+        protected Character() { }
+       
         public Character(string name, bool team) : base(name, team)
         {
+            
         }
-
+        
         public override Position Move(string direction)
         {
             World.Refresh();

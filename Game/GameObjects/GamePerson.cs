@@ -1,9 +1,10 @@
 ﻿using System;
-
+using System.Text.Json.Serialization;
 using Game.GameObjects;
 
 namespace Game
 {
+    [Serializable]
     public abstract class GamePerson : GameObject
     {
         int hp;
@@ -28,8 +29,10 @@ namespace Game
         public int Level { get; set; }
         public int Damage { get; set; }
         public bool Alive { get; set; } = true;
+        [JsonIgnore]
         public Map World { get; set; }
         public IWeapon Weapon { get; set; }
+        protected GamePerson() { }
 
         public GamePerson(string name, bool plFriend)
         {

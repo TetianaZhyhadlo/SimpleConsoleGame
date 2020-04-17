@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Text.Json.Serialization;
 using Game.GameObjects;
 using Game.Weapons;
 
@@ -13,14 +13,18 @@ namespace Game
         Summer,
         Autumn
     }
-
+    [Serializable]
     public class Map
     {
+        
         public int WorldHeight { get; }
         public int WorldWidth { get; }
+
+        [JsonIgnore]
         public Cell[,] Cells { get; }
         public Season Season { get; }
-
+        
+        protected Map() { }
         public Map(int height, int width, Season season)
         {
             Cells = new Cell[height, width];
