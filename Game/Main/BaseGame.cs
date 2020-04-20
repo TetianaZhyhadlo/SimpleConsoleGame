@@ -13,17 +13,19 @@ namespace Game.Main
    [Serializable]
     public class BaseGame
     {
+        [JsonIgnore]
         public Character Character1 { get; set; }
+        [JsonIgnore]
         public Character Character2 { get; set; }
         public int Turn { get; set; }
         public int MapSize1 { get; set; }
         public int MapSize2 { get; set; }
-
         [JsonIgnore]
         public Map World { get; set; }
 
-        public List<string> GameList { get; set; } = new List<string>();
-       // public Menu menuChoose { get; set; }
+        List<string> GameList = new List<string>();
+        // public Menu menuChoose { get; set; }
+        [JsonIgnore]
         public List<GameObject> GameObjects { get; set; } = new List<GameObject>();
         protected BaseGame() { }
         public BaseGame(int mapSize1, int mapSize2)
@@ -117,6 +119,7 @@ namespace Game.Main
                 string savedGame = Console.ReadLine();
                 JsonSerialize(savedGame, this);
                 GameList.Add(savedGame);
+                Continue();
             }
             else
                 ExitGame();
@@ -126,8 +129,8 @@ namespace Game.Main
         {
             GameList
                 .ForEach(x => Console.WriteLine(x));
-            Console.ReadKey();
-            JsonDeserialize(Console.ReadLine()).Start();
+            string game =Console.ReadLine();
+            JsonDeserialize(game).Start();
         }
         public void ExitGame()
         {
