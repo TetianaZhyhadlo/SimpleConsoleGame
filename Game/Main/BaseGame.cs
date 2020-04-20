@@ -23,7 +23,7 @@ namespace Game.Main
         [JsonIgnore]
         public Map World { get; set; }
 
-        List<string> GameList = new List<string>();
+        List<string> GameList { get; set; } = new List<string>();
         // public Menu menuChoose { get; set; }
         [JsonIgnore]
         public List<GameObject> GameObjects { get; set; } = new List<GameObject>();
@@ -119,7 +119,7 @@ namespace Game.Main
                 string savedGame = Console.ReadLine();
                 JsonSerialize(savedGame, this);
                 GameList.Add(savedGame);
-                Continue();
+                ExitGame();
             }
             else
                 ExitGame();
